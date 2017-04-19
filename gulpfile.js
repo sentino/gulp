@@ -1,3 +1,4 @@
+'use strict';
 var server          = require('gulp-server-livereload'), // Webserver
     gulp            = require('gulp'), // Сообственно Gulp JS
     jade            = require('gulp-jade'), // Плагин для Jade
@@ -14,6 +15,19 @@ var server          = require('gulp-server-livereload'), // Webserver
 
 
 
+// Копируем и минимизируем изображения
+gulp.task('images', function() {
+    gulp.src('./build/img/**/*')
+        // .pipe(cache(imagemin({  // Сжимаем их с наилучшими настройками с учетом кеширования
+        //     interlaced: true,
+        //     progressive: true,
+        //     svgoPlugins: [{removeViewBox: false}],
+        //     use: [pngquant()]
+        // })))
+        .pipe(imagemin()) // Минимизируем изображения
+        .pipe(gulp.dest('./public/img')); // Записываем собранные файлы
+});
+
 
 // Собираем Sass
 gulp.task('sass', function() {
@@ -23,6 +37,7 @@ gulp.task('sass', function() {
         .pipe(autoprefixer(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true })) // Создаем префиксы
         .pipe(rename({suffix: '.min'})) // Добавляем суффикс .min
         .pipe(gulp.dest('./public/css/')); // Записываем собранные файлы
+    gulp.run('images');
 });
 
 
@@ -42,20 +57,6 @@ gulp.task('js', function() {
         .pipe(uglify()) // Минификация JS
         .pipe(rename({suffix: '.min'})) // Добавляем суффикс .min
         .pipe(gulp.dest('./public/js')); // Записываем собранные файлы
-});
-
-
-// Копируем и минимизируем изображения
-gulp.task('images', function() {
-    gulp.src('./build/img/**/*')
-        // .pipe(cache(imagemin({  // Сжимаем их с наилучшими настройками с учетом кеширования
-        //     interlaced: true,
-        //     progressive: true,
-        //     svgoPlugins: [{removeViewBox: false}],
-        //     use: [pngquant()]
-        // })))
-        .pipe(imagemin()) // Минимизируем изображения
-        .pipe(gulp.dest('./public/img')); // Записываем собранные файлы
 }); 
 
 
@@ -83,11 +84,11 @@ gulp.task('start', function() {
 
     // Слежение за файлами сборки
     gulp.watch('./build/sass/**/*.sass', function() {
-    	gulp.run('images');
+    	// gulp.run('images');
         gulp.run('sass');
     });
     gulp.watch('./build/**/*.jade', function() {
-    	gulp.run('images');
+    	// gulp.run('images');
         gulp.run('jade');
     });
     gulp.watch('./build/js/**/*', function() {
