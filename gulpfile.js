@@ -31,7 +31,7 @@ gulp.task('images', function() {
 
 // Собираем Sass
 gulp.task('sass', function() {
-    gulp.src('./build/sass/style.sass')
+    gulp.src('./build/sass/style.scss')
         .pipe(sass({outputStyle: 'compressed'})) // собираем sass
         .on('error', console.log) // Если есть ошибки, выводим и продолжаем
         .pipe(autoprefixer(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true })) // Создаем префиксы
@@ -83,7 +83,7 @@ gulp.task('start', function() {
     gulp.run('webserver');
 
     // Слежение за файлами сборки
-    gulp.watch('./build/sass/**/*.sass', function() {
+    gulp.watch('./build/sass/**/*.scss', function() {
     	// gulp.run('images');
         gulp.run('sass');
     });
